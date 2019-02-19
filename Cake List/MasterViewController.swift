@@ -12,28 +12,32 @@ class MasterViewController: UIViewController {
 
     @IBOutlet var masterView: MasterView!
     
-    let cakeController = CakeController()
-    
-    lazy var cakeTableModelController = CakeTableModelController(cakeController: self.cakeController)
-    
+    var networkController: NetworkController!
+    var cakeController: CakeController!
+    var cakeTableModelController: CakeTableModelController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        masterView.tableView.delegate = cakeTableModelController
-        masterView.tableView.dataSource = cakeTableModelController
+        setupModelControllers()
         
         masterView.state = .loading
         
-        cakeController.cakes { [weak self] (cakes) in
-            if let self = self {
-                self.masterView.state = .itemDisplay
-            } else {
-                
-//                displayError
-            }
-        }
+        cakeController.cakes(success: { (cakes) in
+            self.masterView.state = cakes.isEmpty ? .error : .itemDisplay
+        }, failed: { (error) in
+            self.masterView.state = .error
+        })
         
     }
-
+    
+    private func setupModelControllers() {
+        
+        networkController = NetworkController()
+        cakeController = CakeController(networkController: networkController)
+        cakeTableModelController = CakeTableModelController(cakeController: cakeController)
+        
+        masterView.tableView.delegate = cakeTableModelController
+        masterView.tableView.dataSource = cakeTableModelController
+    }
 }

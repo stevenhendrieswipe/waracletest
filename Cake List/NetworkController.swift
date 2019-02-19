@@ -10,17 +10,17 @@ import Foundation
 
 class NetworkController {
 
-    struct NetworkingError: Error {
-        
+    enum NetworkingError: Error {
+        case invalidURL
+        case responseError(Error)
+        case invalidResponse
     }
     
-    
-    static func get(_ urlString: String, succcess: @escaping ((Data) -> Void), failed: @escaping ((Error) -> Void)) {
+    func get(_ urlString: String, succcess: @escaping ((Data) -> Void), failed: @escaping ((NetworkingError) -> Void)) {
         
         guard let url = URL(string: urlString) else {
             DispatchQueue.main.async {
-                let networkError = NetworkingError()
-                failed(networkError)
+                failed(NetworkingError.invalidURL)
             }
             return
         }
@@ -33,12 +33,11 @@ class NetworkController {
         let task = session.dataTask(with: request) { (responseData, response, responseError) in
             DispatchQueue.main.async {
                 if let error = responseError {
-                    failed(error)
+                    failed(NetworkingError.responseError(error))
                 } else if let data = responseData {
                     succcess(data)
                 } else {
-                    let networkError = NetworkingError() //TODO - Add networking error
-                    failed(networkError)
+                    failed(NetworkingError.invalidResponse)
                 }
             }
         }

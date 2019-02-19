@@ -10,48 +10,51 @@ import UIKit
 
 class CakeController {
     
-    let cakeListURL = "https://gist.githubusercontent.com/hart88/198f29ec5114a3ec3460/raw/8dd19a88f9b8d24c23d9960f3300d0c917a4f07c/cake.json"
+    private let cakeListURL = "https://gist.githubusercontent.com/hart88/198f29ec5114a3ec3460/raw/8dd19a88f9b8d24c23d9960f3300d0c917a4f07c/cake.json"
+    
+    let networkController: NetworkController
     
     var cakes = [CakeItem]()
     var cakeImages = [String: UIImage]()
     
-    func cakes(_ complete: @escaping (([CakeItem]) -> Void)) {
-     
-        NetworkController.get(cakeListURL, succcess: { [weak self] (data) in
-            if let self = self {
-                self.cakes = self.parseCakes(data: data)
-                complete(self.cakes)
-            }
-        }) { (error) in
-            complete([])
-        }
+    init(networkController: NetworkController) {
+        self.networkController = networkController
     }
     
-    func cakeImage(from urlString: String, complete: @escaping ((UIImage?) -> Void)) {
+    func cakes(success: @escaping (([CakeItem]) -> Void), failed: @escaping ((NetworkController.NetworkingError) -> Void)) {
+        
+        networkController.get(cakeListURL, succcess: { [unowned self] (data) in
+            self.cakes = self.parseCakes(data: data)
+            success(self.cakes)
+        }, failed: { (error) in
+            failed(error)
+        })
+    }
+    
+    func cakeImage(from urlString: String, success: @escaping ((UIImage?) -> Void), failed: @escaping ((NetworkController.NetworkingError) -> Void)) {
      
         if let image = cakeImages[urlString] {
             DispatchQueue.main.async {
-                complete(image)
+                success(image)
             }
         } else {
-            NetworkController.get(urlString, succcess: { [weak self] (data) in
-            if let self = self {
+            
+            networkController.get(urlString, succcess: { [unowned self] (data) in
                 if let image = self.parseImage(data: data) {
                     self.cakeImages[urlString] = image
-                    complete(image)
+                    success(image)
                 } else {
-                    complete(nil)
+                    failed(NetworkController.NetworkingError.invalidResponse)
                 }
-            }
-            }) { (error) in
-                complete(nil)
-            }
+            }, failed: { (error) in
+                failed(error)
+            })
         }
     }
     
-    private
+
     
-    func parseCakes(data: Data) -> [CakeItem] {
+    private func parseCakes(data: Data) -> [CakeItem] {
         do {
             let decoder = JSONDecoder()
             let cakes = try decoder.decode([CakeItem].self, from: data)
@@ -61,7 +64,7 @@ class CakeController {
         }
     }
     
-    func parseImage(data: Data) -> UIImage? {
+    private func parseImage(data: Data) -> UIImage? {
         let image = UIImage(data: data)
         return image
     }
