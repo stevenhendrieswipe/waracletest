@@ -52,9 +52,7 @@ class CakeController {
         }
     }
     
-
-    
-    private func parseCakes(data: Data) -> [CakeItem] {
+    func parseCakes(data: Data) -> [CakeItem] {
         
         do {
             let decoder = JSONDecoder()
@@ -65,7 +63,7 @@ class CakeController {
         }
     }
     
-    private func parseImage(data: Data) -> UIImage? {
+    func parseImage(data: Data) -> UIImage? {
         
         return UIImage(data: data)
     }
