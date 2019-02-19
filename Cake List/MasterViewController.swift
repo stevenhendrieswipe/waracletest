@@ -13,7 +13,8 @@ class MasterViewController: UIViewController {
     @IBOutlet var masterView: MasterView!
     
     let cakeController = CakeController()
-    let cakeTableModelController = CakeTableModelController()
+    
+    lazy var cakeTableModelController = CakeTableModelController(cakeController: self.cakeController)
     
     
     override func viewDidLoad() {
@@ -22,10 +23,14 @@ class MasterViewController: UIViewController {
         masterView.tableView.delegate = cakeTableModelController
         masterView.tableView.dataSource = cakeTableModelController
         
-        cakeController.getItems { [weak self] (cakes) in
+        masterView.state = .loading
+        
+        cakeController.cakes { [weak self] (cakes) in
             if let self = self {
-                self.cakeTableModelController.cakeItems = cakes
-                self.masterView.updateView()
+                self.masterView.state = .itemDisplay
+            } else {
+                
+//                displayError
             }
         }
         

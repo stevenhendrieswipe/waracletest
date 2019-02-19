@@ -14,37 +14,35 @@ class NetworkController {
         
     }
     
-    enum NetworkResult {
-        case success(Data)
-        case failure(Error)
-    }
     
-
-    static func makeGETRequest(_ urlString: String, result: @escaping ((NetworkResult) -> Void)) -> Bool {
+    static func get(_ urlString: String, succcess: @escaping ((Data) -> Void), failed: @escaping ((Error) -> Void)) {
         
-        guard let url = URL(string: urlString) else { return false }
+        guard let url = URL(string: urlString) else {
+            DispatchQueue.main.async {
+                let networkError = NetworkingError()
+                failed(networkError)
+            }
+            return
+        }
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
+        let session = URLSession(configuration: URLSessionConfiguration.default)
         
         let task = session.dataTask(with: request) { (responseData, response, responseError) in
             DispatchQueue.main.async {
                 if let error = responseError {
-                    result(.failure(error))
-                } else if let jsonData = responseData {
-                    result(.success(jsonData))
+                    failed(error)
+                } else if let data = responseData {
+                    succcess(data)
                 } else {
-                    let error = NetworkingError() //TODO - Add networking error
-                    result(.failure(error))
+                    let networkError = NetworkingError() //TODO - Add networking error
+                    failed(networkError)
                 }
             }
         }
         task.resume()
-        
-        return true
     }
     
 }

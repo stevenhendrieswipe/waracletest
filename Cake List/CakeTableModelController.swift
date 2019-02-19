@@ -10,31 +10,47 @@ import UIKit
 
 class CakeTableModelController: NSObject, UITableViewDelegate, UITableViewDataSource {
     
-    var cakeItems = [CakeItem]()
+    let cakeController: CakeController
+    
+    init(cakeController: CakeController) {
+        self.cakeController = cakeController
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cakeItems.count
+        return cakeController.cakes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       return tableView.dequeueReusableCell(withIdentifier: "CakeCell", for: indexPath) as! CakeCell
-    }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CakeCell", for: indexPath)
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let cell = cell as? CakeCell {
-            let cakeItem = cakeItems[indexPath.row]
-            cell.titleLabel.text = cakeItem.title
-            cell.descriptionLabel.text = cakeItem.description
+        if let cakeCell = cell as? CakeCell {
+            
+            let cakeItem = cakeController.cakes[indexPath.row]
+            cakeCell.titleLabel.text = cakeItem.title
+            cakeCell.descriptionLabel.text = cakeItem.description
+            cakeCell.cakeImage.image = nil
+            
+            cakeController.cakeImage(from: cakeItem.imageURL) { (image) in
+                if let updatedCell = tableView.cellForRow(at: indexPath) as? CakeCell,
+                    let imageview = updatedCell.cakeImage {
+                    
+                    DispatchQueue.main.async {
+                        updatedCell.titleLabel.text = cakeItem.title
+                        updatedCell.descriptionLabel.text = cakeItem.description
+                        imageview.image = image ?? UIImage(named: "error.png")
+                    }
+                }
+            }
         }
+
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
-  
 }
