@@ -15,8 +15,6 @@
 		3C684190221B348B0068396D /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C68418F221B348B0068396D /* NetworkController.swift */; };
 		3C684192221B39110068396D /* CakeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C684191221B39110068396D /* CakeCell.swift */; };
 		3C684194221B5FBA0068396D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C684193221B5FBA0068396D /* AppDelegate.swift */; };
-		3C684198221B7E290068396D /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C684197221B7E290068396D /* error.png */; };
-		3C68419A221C096C0068396D /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C684199221C096C0068396D /* placeholder.png */; };
 		DBF17A231B0B648F004E6311 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBF17A211B0B648F004E6311 /* Main.storyboard */; };
 		DBF17A251B0B648F004E6311 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBF17A241B0B648F004E6311 /* Images.xcassets */; };
 		DBF17A281B0B648F004E6311 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DBF17A261B0B648F004E6311 /* LaunchScreen.xib */; };
@@ -42,8 +40,6 @@
 		3C68418F221B348B0068396D /* NetworkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
 		3C684191221B39110068396D /* CakeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CakeCell.swift; sourceTree = "<group>"; };
 		3C684193221B5FBA0068396D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3C684197221B7E290068396D /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
-		3C684199221C096C0068396D /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder.png; sourceTree = "<group>"; };
 		DBF17A111B0B648F004E6311 /* Cake List.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cake List.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBF17A151B0B648F004E6311 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DBF17A221B0B648F004E6311 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -120,8 +116,6 @@
 		DBF17A131B0B648F004E6311 /* Cake List */ = {
 			isa = PBXGroup;
 			children = (
-				3C684199221C096C0068396D /* placeholder.png */,
-				3C684197221B7E290068396D /* error.png */,
 				3C684193221B5FBA0068396D /* AppDelegate.swift */,
 				DBF17A241B0B648F004E6311 /* Images.xcassets */,
 				DBF17A261B0B648F004E6311 /* LaunchScreen.xib */,
@@ -259,8 +253,6 @@
 			files = (
 				DBF17A231B0B648F004E6311 /* Main.storyboard in Resources */,
 				DBF17A281B0B648F004E6311 /* LaunchScreen.xib in Resources */,
-				3C684198221B7E290068396D /* error.png in Resources */,
-				3C68419A221C096C0068396D /* placeholder.png in Resources */,
 				DBF17A251B0B648F004E6311 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

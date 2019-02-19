@@ -12,8 +12,8 @@ class CakeTableModelController: NSObject, UITableViewDelegate, UITableViewDataSo
     
     let cakeController: CakeController
     
-    let placeholderImage = UIImage(named: "placeholder.png")
-    let errorImage = UIImage(named: "error.png")
+    let placeholderImage = UIImage(named: "Placeholder")
+    let errorImage = UIImage(named: "Error")
     
     init(cakeController: CakeController) {
         self.cakeController = cakeController
