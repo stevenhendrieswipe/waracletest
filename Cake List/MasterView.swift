@@ -8,15 +8,31 @@
 
 import UIKit
 
+protocol MasterViewRefreshDelegate {
+    func onRefreshActioned()
+}
+
 class MasterView: UIView {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var loadingView: UIView!
     
+    let refreshControl = UIRefreshControl()
+    
+    var refreshDelegate: MasterViewRefreshDelegate? {
+        didSet {
+            if #available(iOS 10.0, *) {
+                tableView.refreshControl = refreshControl
+            } else {
+                tableView.addSubview(refreshControl)
+            }
+            refreshControl.addTarget(self, action: #selector(refreshActioned), for: .valueChanged)
+        }
+    }
+    
     enum DisplayState {
         case loading
         case itemDisplay
-        case error
     }
     
     var state: DisplayState = .loading {
@@ -26,33 +42,29 @@ class MasterView: UIView {
                 displayLoading()
             case .itemDisplay:
                 displayItems()
-            case .error:
-                displayError()
             }
         }
     }
     
-    private
-    
-    func displayLoading() {
+    private func displayLoading() {
+        
         tableView.isHidden = true
         loadingView.isHidden = false
     }
     
-    func displayItems() {
+    private func displayItems() {
+        
         tableView.isHidden = false
         loadingView.isHidden = true
+        refreshControl.endRefreshing()
         tableView.reloadData()
     }
     
-    func displayError() {
+    @objc private func refreshActioned() {
         
-    }
-    
-    
-    
-    func updateView() {
-        tableView.reloadData()
+        if let refreshDelegate = refreshDelegate {
+            refreshDelegate.onRefreshActioned()
+        }
     }
 }
 

@@ -28,13 +28,14 @@ class CakeTableModelController: NSObject, UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "CakeCell", for: indexPath)
     
         if let cakeCell = cell as? CakeCell {
             
             let cakeItem = cakeController.cakes[indexPath.row]
-            cakeCell.titleLabel.text = cakeItem.title
-            cakeCell.descriptionLabel.text = cakeItem.description
+            cakeCell.titleLabel.text = cakeItem.title.capitalized
+            cakeCell.descriptionLabel.text = cakeItem.description.capitalized
             cakeCell.cakeImage.image = placeholderImage
             
             cakeController.cakeImage(from: cakeItem.imageURL, success: { (image) in

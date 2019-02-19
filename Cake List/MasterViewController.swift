@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MasterViewController: UIViewController {
+class MasterViewController: UIViewController, MasterViewRefreshDelegate {
 
     @IBOutlet var masterView: MasterView!
     
@@ -20,15 +20,8 @@ class MasterViewController: UIViewController {
         super.viewDidLoad()
 
         setupModelControllers()
-        
         masterView.state = .loading
-        
-        cakeController.cakes(success: { (cakes) in
-            self.masterView.state = cakes.isEmpty ? .error : .itemDisplay
-        }, failed: { (error) in
-            self.masterView.state = .error
-        })
-        
+        requestCakes()
     }
     
     private func setupModelControllers() {
@@ -37,7 +30,33 @@ class MasterViewController: UIViewController {
         cakeController = CakeController(networkController: networkController)
         cakeTableModelController = CakeTableModelController(cakeController: cakeController)
         
+        masterView.refreshDelegate = self
         masterView.tableView.delegate = cakeTableModelController
         masterView.tableView.dataSource = cakeTableModelController
+    }
+    
+    private func requestCakes() {
+        
+        cakeController.cakes(success: { [unowned self] (cakes) in
+                if cakes.isEmpty {
+                    self.displayError()
+                } else {
+                    self.masterView.state = .itemDisplay
+                }
+            }, failed: { (error) in
+                self.displayError()
+        })
+    }
+    
+    private func displayError() {
+        
+        let errorAlert = UIAlertController(title: "Error", message: "Unable to retrieve cakes", preferredStyle: .alert)
+        errorAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        present(errorAlert, animated: true)
+    }
+    
+    func onRefreshActioned() {
+        
+        requestCakes()
     }
 }
